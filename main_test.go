@@ -15,7 +15,6 @@ func TestHandler(t *testing.T) {
 	database.InitDB()
 	router := setupRouter()
 	fmt.Println("Begin test")
-	//list := []todo.Todo{}
 	cu := customer.Customer{}
 
 	//Case 1 Create
