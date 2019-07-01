@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"github.com/gin-gonic/gin"
 	"github.com/pitchat/finalexam/database"
@@ -31,7 +30,6 @@ func setupRouter() *gin.Engine{
 
 func authMiddleware(c *gin.Context){
 	token := c.GetHeader("Authorization")
-	fmt.Println("token:",token)
    if token != "token2019"{
 	   c.JSON(http.StatusUnauthorized, gin.H{"error": http.StatusText(http.StatusUnauthorized)})
 	   c.Abort()

@@ -1,6 +1,7 @@
 package customer
 
 import (
+	"log"
 	"database/sql"
 	"github.com/gin-gonic/gin"
 	"github.com/pitchat/finalexam/database"
@@ -8,7 +9,7 @@ import (
 	"strconv"
 )
 
-//GetAll get all customers
+//GetAll get all data in table
 func (cu Customer) GetAll(conn *sql.DB) ([]database.DataLayer, error) {
 
 	dd := []database.DataLayer{}
@@ -24,7 +25,6 @@ func (cu Customer) GetAll(conn *sql.DB) ([]database.DataLayer, error) {
 		}
 		dd = append(dd, database.IConv(cu))
 	}
-
 	return dd, err
 }
 
@@ -33,14 +33,14 @@ func GetHandler(c *gin.Context) {
 	cu := Customer{}
 	cu2, err := database.GetAll(cu)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		log.Println(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"error":http.StatusText(http.StatusInternalServerError)})
 		return
 	}
-
 	c.JSON(http.StatusOK, cu2)
 }
 
-//GetByKey get customer by key
+//GetByKey get record by key
 func (cu Customer) GetByKey(conn *sql.DB) (database.DataLayer, error) {
 
 	row := conn.QueryRow("SELECT id, name, email, status FROM customers where id = $1", cu.ID)
@@ -51,21 +51,22 @@ func (cu Customer) GetByKey(conn *sql.DB) (database.DataLayer, error) {
 	return database.IConv(cu), err
 }
 
-//GetByIDHandler for retrive customer by ID
+//GetByIDHandler for retrive data by ID
 func GetByIDHandler(c *gin.Context) {
 
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"error":http.StatusText(http.StatusBadRequest)})
 		return
 	}
 	cu1 := Customer{}
 	cu1.ID = id
-	
 
 	cu2, err :=  database.GetByKey(cu1)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		log.Println(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"error":http.StatusText(http.StatusInternalServerError)})
 		return
 	}
 	c.JSON(http.StatusOK, cu2)

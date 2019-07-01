@@ -1,13 +1,14 @@
 package customer
 
 import (
+	"log"
 	"database/sql"
 	"github.com/gin-gonic/gin"
 	"github.com/pitchat/finalexam/database"
 	"net/http"
 )
 
-//Insert customer
+//Insert database
 func (cu Customer) Insert(conn *sql.DB) (database.DataLayer, error) {
 
 	row := conn.QueryRow("INSERT INTO customers (name, email, status) VALUES ($1, $2, $3) RETURNING id", cu.Name, cu.Email, cu.Status)
@@ -20,15 +21,16 @@ func CreateHandler(c *gin.Context) {
 
 	c1 := Customer{}
 	if err := c.ShouldBindJSON(&c1); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		log.Println(err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"error":http.StatusText(http.StatusBadRequest)})
 		return
 	}
 
 	c2, err := database.Insert(c1)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		log.Println(err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"error":http.StatusText(http.StatusInternalServerError)})
 		return
 	}
-
 	c.JSON(http.StatusCreated, c2)
 }
