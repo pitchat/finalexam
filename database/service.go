@@ -19,7 +19,7 @@ func GetByKey(d DataLayer) (DataLayer, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer conn.Close()
+	//defer conn.Close()
 	o, err := d.GetByKey(conn)
 	return o, err
 }
@@ -30,7 +30,7 @@ func GetAll(d DataLayer) ([]DataLayer, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer conn.Close()
+	//defer conn.Close()
 	o, err := d.GetAll(conn)
 	return o, err
 }
@@ -41,7 +41,7 @@ func Insert(d DataLayer) (DataLayer, error) {
 	if err != nil {
 		return nil, err
 	}
-	defer conn.Close()
+	//defer conn.Close()
 	o, err := d.Insert(conn)
 	return o, err
 }
@@ -52,7 +52,7 @@ func Update(d DataLayer) error {
 	if err != nil {
 		return err
 	}
-	defer conn.Close()
+	//defer conn.Close()
 	err = d.Update(conn)
 	return err
 }
@@ -63,7 +63,7 @@ func Delete(d DataLayer) error {
 	if err != nil {
 		return err
 	}
-	defer conn.Close()
+	//defer conn.Close()
 	err = d.Delete(conn)
 	return err
 }

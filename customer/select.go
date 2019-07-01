@@ -30,22 +30,14 @@ func (cu Customer) GetAll(conn *sql.DB) ([]database.DataLayer, error) {
 
 //GetHandler gin api
 func GetHandler(c *gin.Context) {
-
 	cu := Customer{}
-	conn, err := database.Connect()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-	defer conn.Close()
-
-	dd, err := cu.GetAll(conn)
+	cu2, err := database.GetAll(cu)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, dd)
+	c.JSON(http.StatusOK, cu2)
 }
 
 //GetByKey get customer by key
@@ -62,15 +54,16 @@ func (cu Customer) GetByKey(conn *sql.DB) (database.DataLayer, error) {
 //GetByIDHandler for retrive customer by ID
 func GetByIDHandler(c *gin.Context) {
 
-	cu1 := Customer{}
 	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	cu1 := Customer{}
 	cu1.ID = id
+	
 
-	cu2, err := database.GetByKey(cu1)
+	cu2, err :=  database.GetByKey(cu1)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

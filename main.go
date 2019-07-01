@@ -10,6 +10,7 @@ import (
 
 func main() {
 	database.InitDB()
+	defer database.Close()
 	r := setupRouter()
 	r.Run(":2019") //listen and serve on 0.0.0.0:2019
 }
